@@ -1,11 +1,10 @@
 ######################################### 	
 #    CSCI 305 - Programming Lab #1		
 #										
-#  < Kaleb >			
-#  < kaleb.himes@gmail.com >			
+#  < Replace with your Name >			
+#  < Replace with your Email >			
 #										
 #########################################
-use strict;
 use Data::Dump;
 # Replace the string value of the following variable with your names.
 
@@ -20,7 +19,6 @@ print "CSCI 305 Lab 1 submitted by $name and $partner.\n\n";
 open (FILE, 'unique_tracks.txt');
 
 my @values = ();
-#a counter that will keep track of the unique number of song titles found
 my $counter = 0;
 while (<FILE>) {
 chomp;
@@ -70,14 +68,12 @@ my $some_word = '';
 my $noStop = '';
 my @titles = ();
 my @troubleWords= ();
-@troubleWords = ('a','an','and', 'are','by','for','from','in','of','on','or','out','the','to','with');
-my @generatedTitle = ();
 do{
 	@titles = (); #clear the array upon each call of the do-while loop
 	
 	#if this is the first run of the do-while ask for a word from user
 	if($maxRuns == 0){
-		
+		@troubleWords = ('a','an','and', 'are','by','for','from','in','of','on','or','out','the','to','with');
 		$some_word = '';
 		#ask for new input from user
 		print("\n\nEnter Word (or 'q' to quit): ");
@@ -103,21 +99,6 @@ do{
 		#and comment out the following foreach loop
 		 $noStop = stopWords(\@titles,\@troubleWords,$last);
 		
-		#this was the method used prior to generating 20 word song titles for each search
-		#this method would generally terminate after only 2 or 3 word long song titles if using
-		#english words.
-#			my $check = (split " ", $last)[-1];
-#			foreach my $stop(@stopWords) {
-#				my $compare = $stop eq $check;
-#				if($compare == 1){
-#					$last = '.';
-#					$noStop = '.';
-#					$maxRuns = 0;
-#				}else{
-#				$noStop = $last;
-#				}	
-#			}
-		
 		#set counter to zero
 		$counter = 0;
 		#run sub mcw--> return the most frequent
@@ -127,9 +108,9 @@ do{
 		push(@troubleWords, $some_word);
 	}else{
 		#otherwise reset max runs to zero
-		print("\n\"@generatedTitle\"\n");
-		@generatedTitle = ();
+		print ("@troubleWords");
 		$maxRuns = 0;
+		
 	}
 	
 }while($some_word ne "q");
@@ -144,35 +125,36 @@ sub mcw{
 		$max = 0;
 	}
 	my $uniqueCommon = (split(/ /, $Arg1))[-1];
-	print("\"$uniqueCommon\"\n");
-	push(@generatedTitle, $uniqueCommon);
+	print("\n\"$uniqueCommon\"\n");
 	return $uniqueCommon;
 	
 }
 # a recursive method for finding non-repeating words to create the song title from
  sub stopWords{
-	 my ($foundBiGrams,$stops,$theArgument) = @_;
+	($foundBiGrams,$stops,$theArgument) = @_;
 	 chomp($theArgument);
-	 my $length = @$stops;
-	 my $checkArg = '';
+	 $length = @$stops;
+	 $checkArg = '';
 	 $checkArg = (split(/ /, $theArgument))[-1];
 	 #print("the word being checked is: \"$checkArg\"\n");
-		 for my $stop(0..$length){
+		 for  $stop(0..$length){
+			 $check = @$stops[$stop];
+			 $fail = $checkArg;
+			 $compare = (@$stops[$stop] eq $checkArg);		
 			 if(@$stops[$stop] eq $checkArg){
-			 #we were not taught enough about perl to understand why this is behaving the way it is.
-			 #somehow it is not resetting each time and starting over from the beginning of the array
-			 #as my logic is telling me it should so i reset $stop multiple times but still is not resetting.
+			 #print ("comparing \"$check\" to \"$fail\" result = $compare\n");
 				$stop = 0;
 				$checkArg = '';
 				$theArgument = '';
 				$theArgument = pop @$foundBiGrams;
-				#print("the title being checked is: \"$theArgument\"\n");
+				print("the title being checked is: \"$theArgument\"\n");
 				stopWords($foundBiGrams,$stops,$theArgument);				
 			 }
 		 }
 	#print("the value being pushed into the array is: \"$checkArg\"\n");
 	#if the checkArgument passed the test and made it this far, push it into the stopWords
 	#array so that it will not be repeated later in the song title.
+	#print("After all the checks the Argument is now $theArgument\n");
 	return $theArgument;
  }
 
